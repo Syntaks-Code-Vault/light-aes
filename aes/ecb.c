@@ -1,5 +1,4 @@
 #include "ecb.h"
-#include <stdio.h>
 
 #define GF  0b100011011
 
@@ -84,16 +83,15 @@ byte* expand_key(byte* key, byte key_length) {
     return round_keys;
 }
 
-aes_ecb create_aes_ecb_instance(byte* key, byte key_length) {
-    printf("I AM CALLED!\n");
-
-    aes_ecb instance;
+aes_ecb* create_aes_ecb_instance(const byte* key, byte key_length) {
+    aes_ecb* instance = (aes_ecb*) malloc(sizeof(aes_ecb));
 
     if (key_length == KEY_SIZE_128 || key_length == KEY_SIZE_192 || key_length == KEY_SIZE_256) {
-        instance.key_length = key_length;
+        instance -> key_length = key_length;
 
+        instance -> key = (byte*) malloc(key_length);
         do {
-            instance.key[key_length] = key[key_length];
+            instance -> key[key_length] = key[key_length];
         } while (key_length-- > 0);
     }
 
@@ -214,9 +212,9 @@ void inv_sub_bytes(byte* state) {
         state[i] = INV_S_BOX[state[i]];
 }
 
-void encrypt_ecb(aes_ecb instance, byte* plaintext) {
+void encrypt_ecb(aes_ecb* instance, byte* plaintext) {
     byte Nr = 0;
-    switch (instance.key_length) {
+    switch (instance -> key_length) {
         case KEY_SIZE_128:
             Nr = 10;
             break;
@@ -228,9 +226,9 @@ void encrypt_ecb(aes_ecb instance, byte* plaintext) {
             break;
     }
 
-    byte Nk = instance.key_length / 4;
+    byte Nk = instance -> key_length / 4;
 
-    byte* round_keys = expand_key(instance.key, instance.key_length);
+    byte* round_keys = expand_key(instance -> key, instance -> key_length);
     
     add_round_key(plaintext, round_keys);
 
@@ -247,11 +245,11 @@ void encrypt_ecb(aes_ecb instance, byte* plaintext) {
     add_round_key(plaintext, round_keys + (16 * r));
 }
 
-void decrypt_ecb(aes_ecb instance, byte* ciphertext) {
+void decrypt_ecb(aes_ecb* instance, byte* ciphertext) {
     byte* s = ciphertext;
     
     byte Nr = 0;
-    switch (instance.key_length) {
+    switch (instance -> key_length) {
         case KEY_SIZE_128:
             Nr = 10;
             break;
@@ -263,9 +261,9 @@ void decrypt_ecb(aes_ecb instance, byte* ciphertext) {
             break;
     }
 
-    byte Nk = instance.key_length / 4;
+    byte Nk = instance -> key_length / 4;
 
-    byte* round_keys = expand_key(instance.key, instance.key_length);
+    byte* round_keys = expand_key(instance -> key, instance -> key_length);
     
     add_round_key(s, round_keys + (16 * Nr));
     

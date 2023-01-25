@@ -14,9 +14,9 @@ typedef struct _aes_ecb {
     byte* key;
 } aes_ecb;
 
-aes_ecb create_aes_ecb_instance(byte* key, byte key_length);
+aes_ecb* create_aes_ecb_instance(const byte* key, byte key_length);
 
-void encrypt_ecb(aes_ecb instance, byte* plaintext);
-void decrypt_ecb(aes_ecb instance, byte* ciphertext);
+void encrypt_ecb(aes_ecb* instance, byte* plaintext);
+void decrypt_ecb(aes_ecb* instance, byte* ciphertext);
 
 #endif
