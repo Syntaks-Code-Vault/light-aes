@@ -1,4 +1,5 @@
 #include "ecb.h"
+#include <stdio.h>
 
 #define GF  0b100011011
 
@@ -84,6 +85,8 @@ byte* expand_key(byte* key, byte key_length) {
 }
 
 aes_ecb create_aes_ecb_instance(byte* key, byte key_length) {
+    printf("I AM CALLED!\n");
+
     aes_ecb instance;
 
     if (key_length == KEY_SIZE_128 || key_length == KEY_SIZE_192 || key_length == KEY_SIZE_256) {

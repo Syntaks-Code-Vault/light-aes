@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "aes/core.h"
 #include "aes/ecb.h"
 #include "aes/tools.h"
 
@@ -8,7 +9,10 @@ int main() {
     // byte* key = hexstr_to_hex("603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4");
     byte* x = hexstr_to_hex("00112233445566778899aabbccddeeff");
 
-    aes_ecb aes = create_aes_ecb_instance(key, KEY_SIZE_192);
+    aes_ecb aes = create_aes_ecb_instance(key, KEY_SIZE_128);
+
+    printf("Banana!\n");
+    print_hex(x, 16);
 
     encrypt_ecb(aes, x);
     print_hex(x, 16);
