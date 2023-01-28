@@ -1,5 +1,25 @@
 #include "tools.h"
 
+byte rand_seeded = 0;
+
+void __xor16(byte* dst, byte* src) {
+    for (byte i = 0 ; i < 16 ; i++)
+        dst[i] ^= src[i];
+}
+
+void __copy16(byte* dst, byte* src) {
+    for (byte i = 0 ; i < 16 ; i++)
+        dst[i] = src[i];
+}
+
+void __inc16(byte* dst) {
+    for (byte i = 15 ; i >= 0 ; i--) {
+        dst[i]++;
+        if (dst[i] != 0)
+            break;
+    }
+}
+
 void print_hex(byte* buffer, int buffer_length) {
     printf("0x");
     for (int i = 0 ; i < buffer_length ; i++)
@@ -31,4 +51,17 @@ byte* hexstr_to_hex(const char* buffer) {
     }
 
     return hex;
+}
+
+void generate_random_bytes(byte* buffer, byte buffer_length) {
+    if (!rand_seeded)
+        srand((unsigned int)(buffer + time(NULL) + buffer_length + ++rand_seeded));
+
+    for (byte i = 0 ; i < buffer_length ; i += 2) {
+        unsigned int r = rand();
+
+        buffer[i] = r & 0x00FF;
+        if ((i + 1) < buffer_length)
+            buffer[i + 1] = r >> 8;
+    }
 }

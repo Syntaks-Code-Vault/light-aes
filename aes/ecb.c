@@ -212,7 +212,7 @@ void inv_sub_bytes(byte* state) {
         state[i] = INV_S_BOX[state[i]];
 }
 
-void encrypt_ecb(aes_ecb* instance, byte* plaintext) {
+void encrypt_ecb(aes_ecb* instance, byte* buffer) {
     byte Nr = 0;
     switch (instance -> key_length) {
         case KEY_SIZE_128:
@@ -230,24 +230,22 @@ void encrypt_ecb(aes_ecb* instance, byte* plaintext) {
 
     byte* round_keys = expand_key(instance -> key, instance -> key_length);
     
-    add_round_key(plaintext, round_keys);
+    add_round_key(buffer, round_keys);
 
     byte r;
     for (r = 1 ; r < Nr ; r++) {
-        sub_bytes(plaintext);
-        shift_rows(plaintext);
-        mix_columns(plaintext);
-        add_round_key(plaintext, round_keys + (16 * r));
+        sub_bytes(buffer);
+        shift_rows(buffer);
+        mix_columns(buffer);
+        add_round_key(buffer, round_keys + (16 * r));
     }
 
-    sub_bytes(plaintext);
-    shift_rows(plaintext);
-    add_round_key(plaintext, round_keys + (16 * r));
+    sub_bytes(buffer);
+    shift_rows(buffer);
+    add_round_key(buffer, round_keys + (16 * r));
 }
 
-void decrypt_ecb(aes_ecb* instance, byte* ciphertext) {
-    byte* s = ciphertext;
-    
+void decrypt_ecb(aes_ecb* instance, byte* buffer) {
     byte Nr = 0;
     switch (instance -> key_length) {
         case KEY_SIZE_128:
@@ -265,17 +263,17 @@ void decrypt_ecb(aes_ecb* instance, byte* ciphertext) {
 
     byte* round_keys = expand_key(instance -> key, instance -> key_length);
     
-    add_round_key(s, round_keys + (16 * Nr));
+    add_round_key(buffer, round_keys + (16 * Nr));
     
     byte r;
     for (r = Nr - 1 ; r > 0 ; r--) {
-        inv_shift_rows(s);
-        inv_sub_bytes(s);
-        add_round_key(s, round_keys + (16 * r));
-        inv_mix_columns(s);
+        inv_shift_rows(buffer);
+        inv_sub_bytes(buffer);
+        add_round_key(buffer, round_keys + (16 * r));
+        inv_mix_columns(buffer);
     }
 
-    inv_shift_rows(s);
-    inv_sub_bytes(s);
-    add_round_key(s, round_keys);
+    inv_shift_rows(buffer);
+    inv_sub_bytes(buffer);
+    add_round_key(buffer, round_keys);
 }

@@ -44,6 +44,9 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+# VSCode Preferences
+.vscode/
+
 # CMake Build Directory
 /build
 
