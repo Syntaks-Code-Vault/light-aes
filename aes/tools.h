@@ -7,9 +7,10 @@
 
 typedef unsigned char byte;
 
-void __xor16(byte* dst, byte* src);
-void __copy16(byte* dst, byte* src);
-void __inc16(byte* dst);
+void __xor(byte* dst, byte* src, byte n);
+void __copy(byte* dst, byte* src, byte n);
+void __inc(byte* dst, byte n);
+byte __eq(byte* a, byte* b, byte n);
 
 void print_hex(byte* buffer, int buffer_length);
 byte* hexstr_to_hex(const char* buffer);

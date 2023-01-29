@@ -2,22 +2,30 @@
 
 byte rand_seeded = 0;
 
-void __xor16(byte* dst, byte* src) {
-    for (byte i = 0 ; i < 16 ; i++)
+void __xor(byte* dst, byte* src, byte n) {
+    for (byte i = 0 ; i < n ; i++)
         dst[i] ^= src[i];
 }
 
-void __copy16(byte* dst, byte* src) {
-    for (byte i = 0 ; i < 16 ; i++)
+void __copy(byte* dst, byte* src, byte n) {
+    for (byte i = 0 ; i < n ; i++)
         dst[i] = src[i];
 }
 
-void __inc16(byte* dst) {
-    for (byte i = 15 ; i >= 0 ; i--) {
+void __inc(byte* dst, byte n) {
+    for (byte i = n-1 ; i >= 0 ; i--) {
         dst[i]++;
         if (dst[i] != 0)
             break;
     }
+}
+
+byte __eq(byte* a, byte* b, byte n) {
+    for (byte i = 0 ; i < n ; i++)
+        if (a[i] != b[i])
+            return 0;
+
+    return 1;
 }
 
 void print_hex(byte* buffer, int buffer_length) {

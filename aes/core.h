@@ -17,7 +17,10 @@ typedef struct _aes {
 } aes;
 
 aes* create_aes_instance(byte* key, byte key_length, byte mode);
+
 void encrypt_aes(aes* instance, byte* buffer, unsigned int buffer_length);
 void decrypt_aes(aes* instance, byte* buffer, unsigned int buffer_length);
+
+void destroy_aes_instance(aes* instance);
 
 #endif

@@ -36,23 +36,10 @@ const byte INV_S_BOX[] = {  0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf
                             0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61, 
                             0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d, };
 
-byte* expand_key(byte* key, byte key_length) {
+void expand_key(byte* round_keys, byte* key, byte key_length) {
     byte Nk = key_length / 4;
-    byte Nr = 0;
-    switch (key_length) {
-        case KEY_SIZE_128:
-            Nr = 10;
-            break;
-        case KEY_SIZE_192:
-            Nr = 12;
-            break;
-        case KEY_SIZE_256:
-            Nr = 14;
-            break;
-    }
-
+    byte Nr = 6 + Nk;
     byte Nw = (1 + Nr) * 4;
-    byte* round_keys = (byte*) malloc(Nw * 4);
 
     for (byte b = 0 ; b < key_length ; b++)
         round_keys[b] = key[b];
@@ -79,14 +66,12 @@ byte* expand_key(byte* key, byte key_length) {
                     round_keys[4 * wi + i] = round_keys[4 * (wi - 1) + i] ^ round_keys[4 * (wi - Nk) + i];
             }
     }
-
-    return round_keys;
 }
 
-aes_ecb* create_aes_ecb_instance(const byte* key, byte key_length) {
+aes_ecb* create_aes_ecb_instance(byte* key, byte key_length) {
     aes_ecb* instance = (aes_ecb*) malloc(sizeof(aes_ecb));
 
-    if (key_length == KEY_SIZE_128 || key_length == KEY_SIZE_192 || key_length == KEY_SIZE_256) {
+    if ((key_length == KEY_SIZE_128) || (key_length == KEY_SIZE_192) || (key_length == KEY_SIZE_256)) {
         instance -> key_length = key_length;
 
         instance -> key = (byte*) malloc(key_length);
@@ -96,6 +81,11 @@ aes_ecb* create_aes_ecb_instance(const byte* key, byte key_length) {
     }
 
     return instance;
+}
+
+void destroy_aes_ecb_instance(aes_ecb* instance) {
+    free(instance -> key);
+    free(instance);
 }
 
 byte mul_GF(byte val, byte m) {
@@ -122,7 +112,7 @@ byte mul_GF(byte val, byte m) {
 }
 
 void sub_bytes(byte* state) {
-    for (byte i = 0 ; i < 16 ; i++)
+    for (byte i = 0 ; i < AES_BLOCK_SIZE ; i++)
         state[i] = S_BOX[state[i]];
 }
 
@@ -165,7 +155,7 @@ void mix_columns(byte* state) {
 }
 
 void add_round_key(byte* state, byte* round_key) {
-    for (byte i = 0 ; i < 16 ; i++)
+    for (byte i = 0 ; i < AES_BLOCK_SIZE ; i++)
         state[i] ^= round_key[i];
 }
 
@@ -208,27 +198,16 @@ void inv_shift_rows(byte* state) {
 }
 
 void inv_sub_bytes(byte* state) {
-    for (byte i = 0 ; i < 16 ; i++)
+    for (byte i = 0 ; i < AES_BLOCK_SIZE ; i++)
         state[i] = INV_S_BOX[state[i]];
 }
 
 void encrypt_ecb(aes_ecb* instance, byte* buffer) {
-    byte Nr = 0;
-    switch (instance -> key_length) {
-        case KEY_SIZE_128:
-            Nr = 10;
-            break;
-        case KEY_SIZE_192:
-            Nr = 12;
-            break;
-        case KEY_SIZE_256:
-            Nr = 14;
-            break;
-    }
-
     byte Nk = instance -> key_length / 4;
-
-    byte* round_keys = expand_key(instance -> key, instance -> key_length);
+    byte Nr = 6 + Nk;
+    
+    byte* round_keys = (byte*) malloc(16 * (Nr + 1));
+    expand_key(round_keys, instance -> key, instance -> key_length);
     
     add_round_key(buffer, round_keys);
 
@@ -237,43 +216,36 @@ void encrypt_ecb(aes_ecb* instance, byte* buffer) {
         sub_bytes(buffer);
         shift_rows(buffer);
         mix_columns(buffer);
-        add_round_key(buffer, round_keys + (16 * r));
+        add_round_key(buffer, round_keys + (AES_BLOCK_SIZE * r));
     }
 
     sub_bytes(buffer);
     shift_rows(buffer);
-    add_round_key(buffer, round_keys + (16 * r));
+    add_round_key(buffer, round_keys + (AES_BLOCK_SIZE * r));
+
+    free(round_keys);
 }
 
 void decrypt_ecb(aes_ecb* instance, byte* buffer) {
-    byte Nr = 0;
-    switch (instance -> key_length) {
-        case KEY_SIZE_128:
-            Nr = 10;
-            break;
-        case KEY_SIZE_192:
-            Nr = 12;
-            break;
-        case KEY_SIZE_256:
-            Nr = 14;
-            break;
-    }
-
     byte Nk = instance -> key_length / 4;
+    byte Nr = 6 + Nk;
 
-    byte* round_keys = expand_key(instance -> key, instance -> key_length);
+    byte* round_keys = (byte*) malloc(16 * (Nr + 1));
+    expand_key(round_keys, instance -> key, instance -> key_length);
     
-    add_round_key(buffer, round_keys + (16 * Nr));
+    add_round_key(buffer, round_keys + (AES_BLOCK_SIZE * Nr));
     
     byte r;
     for (r = Nr - 1 ; r > 0 ; r--) {
         inv_shift_rows(buffer);
         inv_sub_bytes(buffer);
-        add_round_key(buffer, round_keys + (16 * r));
+        add_round_key(buffer, round_keys + (AES_BLOCK_SIZE * r));
         inv_mix_columns(buffer);
     }
 
     inv_shift_rows(buffer);
     inv_sub_bytes(buffer);
     add_round_key(buffer, round_keys);
+
+    free(round_keys);
 }
