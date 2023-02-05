@@ -12,5 +12,6 @@ set(AES_HEADERS
 )
 
 add_executable(${PROJECT_NAME} "main.c" ${AES_SOURCES})
+add_executable("test_data_gen" "test_data_gen.c" ${AES_SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${AES_HEADERS})
