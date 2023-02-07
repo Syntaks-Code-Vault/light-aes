@@ -63,6 +63,13 @@ void encrypt_aes(aes* instance, byte* buffer, unsigned int buffer_length) {
                     __copy(instance -> iv_buffer, buffer + i, AES_BLOCK_SIZE);
                 }
                 break;
+
+            case MODE_OFB:
+                if ((instance -> mode & 0xF0) == 0xA0) {
+                    encrypt_ecb(instance -> instance, instance -> iv_buffer);
+                    __xor(buffer + i, instance -> iv_buffer, AES_BLOCK_SIZE);
+                }
+                break;
         }
     }
 
@@ -105,6 +112,13 @@ void decrypt_aes(aes* instance, byte* buffer, unsigned int buffer_length) {
                     __copy(instance -> iv_buffer, buffer + i, AES_BLOCK_SIZE);
                     encrypt_ecb(instance -> instance, internal_state);
                     __xor(buffer + i, internal_state, AES_BLOCK_SIZE);
+                }
+                break;
+
+            case MODE_OFB:
+                if ((instance -> mode & 0xF0) == 0xC0) {
+                    encrypt_ecb(instance -> instance, instance -> iv_buffer);
+                    __xor(buffer + i, instance -> iv_buffer, AES_BLOCK_SIZE);
                 }
                 break;
         }

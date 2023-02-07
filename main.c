@@ -66,7 +66,7 @@ int main() {
             case KEY_SIZE_256: key_buffer = hexstr_to_hex("603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4"); break;
         };
 
-        for (byte mode = MODE_ECB ; mode <= MODE_CFB ; mode++) {
+        for (byte mode = MODE_ECB ; mode <= MODE_OFB ; mode++) {
             switch (mode) {
                 case MODE_ECB: 
                     printf("\nTest Vectors for ECB-AES-%d\n", key_length * 8); 
@@ -77,7 +77,6 @@ int main() {
                     };
                     break;
                 case MODE_CTR:
-                    iv_buffer = hexstr_to_hex("f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff");
                     printf("\nTest Vectors for CTR-AES-%d\n", key_length * 8); 
                     switch (key_length) {
                         case KEY_SIZE_128: ct_buffer = hexstr_to_hex("874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee"); break;
@@ -86,7 +85,6 @@ int main() {
                     };
                     break;
                 case MODE_CBC:
-                    iv_buffer = hexstr_to_hex("000102030405060708090a0b0c0d0e0f");
                     printf("\nTest Vectors for CBC-AES-%d\n", key_length * 8);
                     switch (key_length) {
                         case KEY_SIZE_128: ct_buffer = hexstr_to_hex("7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a7"); break;
@@ -95,7 +93,6 @@ int main() {
                     };
                     break;
                 case MODE_CFB:
-                    iv_buffer = hexstr_to_hex("000102030405060708090a0b0c0d0e0f");
                     printf("\nTest Vectors for CFB-AES-%d\n", key_length * 8);
                     switch (key_length) {
                         case KEY_SIZE_128: ct_buffer = hexstr_to_hex("3b3fd92eb72dad20333449f8e83cfb4ac8a64537a0b3a93fcde3cdad9f1ce58b26751f67a3cbb140b1808cf187a4f4dfc04b05357c5d1c0eeac4c66f9ff7f2e6"); break;
@@ -104,16 +101,16 @@ int main() {
                     };
                     break;
                 case MODE_OFB:
-                    iv_buffer = hexstr_to_hex("000102030405060708090a0b0c0d0e0f");
-                    printf("\nTest Vectors for OFB-AES-%d\n", key_length * 8); 
-                    // TO BE UPDATED
+                    printf("\nTest Vectors for OFB-AES-%d\n", key_length * 8);
                     switch (key_length) {
-                        case KEY_SIZE_128: ct_buffer = hexstr_to_hex("3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4"); break;
-                        case KEY_SIZE_192: ct_buffer = hexstr_to_hex("bd334f1d6e45f25ff712a214571fa5cc974104846d0ad3ad7734ecb3ecee4eefef7afd2270e2e60adce0ba2face6444e9a4b41ba738d6c72fb16691603c18e0e"); break;
-                        case KEY_SIZE_256: ct_buffer = hexstr_to_hex("f3eed1bdb5d2a03c064b5a7e3db181f8591ccb10d410ed26dc5ba74a31362870b6ed21b99ca6f4f9f153e7b1beafed1d23304b7a39f9f3ff067d8d8f9e24ecc7"); break;
+                        case KEY_SIZE_128: ct_buffer = hexstr_to_hex("3b3fd92eb72dad20333449f8e83cfb4a7789508d16918f03f53c52dac54ed8259740051e9c5fecf64344f7a82260edcc304c6528f659c77866a510d9c1d6ae5e"); break;
+                        case KEY_SIZE_192: ct_buffer = hexstr_to_hex("cdc80d6fddf18cab34c25909c99a4174fcc28b8d4c63837c09e81700c11004018d9a9aeac0f6596f559c6d4daf59a5f26d9f200857ca6c3e9cac524bd9acc92a"); break;
+                        case KEY_SIZE_256: ct_buffer = hexstr_to_hex("dc7e84bfda79164b7ecd8486985d38604febdc6740d20b3ac88f6ad82a4fb08d71ab47a086e86eedf39d1c5bba97c4080126141d67f37be8538f5a8be740e484"); break;
                     };
                     break;
             };
+            iv_buffer = hexstr_to_hex((mode == MODE_CTR) ? "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff" : "000102030405060708090a0b0c0d0e0f");
+
 
             printf("--------------------------------------------------------------------------------\n");
             printf("Key        : "); print_hex(key_buffer, key_length);
