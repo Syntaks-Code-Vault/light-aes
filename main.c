@@ -2,21 +2,6 @@
 #include "aes/core.h" 
 
 int main() {
-    /* 
-     * Loop this shit with file of test vectors
-     * 
-     * Binary File of Test Vectors (test_vectors.bin)
-     * 
-     * Every Test Instance:
-     *  [status_byte][key][plaintext][ciphertext]
-     * 
-     * status_byte: 7 654 321 0
-     *  b7   - Test Set  - (0):NIST FIPS 197 (1):NIST SP 800-38A [Also determine length of plaintext and ciphertext from here]
-     *  b654 - Mode      - As per aes/core.h (direct values)
-     *  b321 - Keylen    - As per aes/ecb.h (values >> 3)
-     *  b0   - 0         - EOF Checker
-     */
-
     byte* key_buffer;
     byte* iv_buffer;
     byte* pt_buffer;
@@ -81,7 +66,7 @@ int main() {
             case KEY_SIZE_256: key_buffer = hexstr_to_hex("603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4"); break;
         };
 
-        for (byte mode = MODE_ECB ; mode <= MODE_CBC ; mode++) {
+        for (byte mode = MODE_ECB ; mode <= MODE_CFB ; mode++) {
             switch (mode) {
                 case MODE_ECB: 
                     printf("\nTest Vectors for ECB-AES-%d\n", key_length * 8); 
@@ -110,15 +95,16 @@ int main() {
                     };
                     break;
                 case MODE_CFB:
-                    printf("\nTest Vectors for CFB-AES-%d\n", key_length * 8); 
-                    // TO BE UPDATED
+                    iv_buffer = hexstr_to_hex("000102030405060708090a0b0c0d0e0f");
+                    printf("\nTest Vectors for CFB-AES-%d\n", key_length * 8);
                     switch (key_length) {
-                        case KEY_SIZE_128: ct_buffer = hexstr_to_hex("3ad77bb40d7a3660a89ecaf32466ef97f5d3d58503b9699de785895a96fdbaaf43b1cd7f598ece23881b00e3ed0306887b0c785e27e8ad3f8223207104725dd4"); break;
-                        case KEY_SIZE_192: ct_buffer = hexstr_to_hex("bd334f1d6e45f25ff712a214571fa5cc974104846d0ad3ad7734ecb3ecee4eefef7afd2270e2e60adce0ba2face6444e9a4b41ba738d6c72fb16691603c18e0e"); break;
-                        case KEY_SIZE_256: ct_buffer = hexstr_to_hex("f3eed1bdb5d2a03c064b5a7e3db181f8591ccb10d410ed26dc5ba74a31362870b6ed21b99ca6f4f9f153e7b1beafed1d23304b7a39f9f3ff067d8d8f9e24ecc7"); break;
+                        case KEY_SIZE_128: ct_buffer = hexstr_to_hex("3b3fd92eb72dad20333449f8e83cfb4ac8a64537a0b3a93fcde3cdad9f1ce58b26751f67a3cbb140b1808cf187a4f4dfc04b05357c5d1c0eeac4c66f9ff7f2e6"); break;
+                        case KEY_SIZE_192: ct_buffer = hexstr_to_hex("cdc80d6fddf18cab34c25909c99a417467ce7f7f81173621961a2b70171d3d7a2e1e8a1dd59b88b1c8e60fed1efac4c9c05f9f9ca9834fa042ae8fba584b09ff"); break;
+                        case KEY_SIZE_256: ct_buffer = hexstr_to_hex("dc7e84bfda79164b7ecd8486985d386039ffed143b28b1c832113c6331e5407bdf10132415e54b92a13ed0a8267ae2f975a385741ab9cef82031623d55b1e471"); break;
                     };
                     break;
                 case MODE_OFB:
+                    iv_buffer = hexstr_to_hex("000102030405060708090a0b0c0d0e0f");
                     printf("\nTest Vectors for OFB-AES-%d\n", key_length * 8); 
                     // TO BE UPDATED
                     switch (key_length) {
