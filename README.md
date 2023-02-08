@@ -10,3 +10,6 @@ Supports the following [Block Cipher Modes of Operation](https://en.wikipedia.or
 - CFB (Cipher Feed Back)
 - OFB (Output Feed Back)
 
+Validated over the Standard Test Vectors provided in:
+- [NIST FIPS 197](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf)
+- [NIST SP 800-38A](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38a.pdf)
