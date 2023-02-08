@@ -2,3 +2,11 @@
 
 # light-aes
 A Memory Optimized AES-128/192/256 Implementation in C
+
+Supports the following [Block Cipher Modes of Operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation):
+- ECB (Electronic Code Book)
+- CTR (Counter)
+- CBC (Cipher Block Chaining)
+- CFB (Cipher Feed Back)
+- OFB (Output Feed Back)
+
