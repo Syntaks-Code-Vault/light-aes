@@ -11,6 +11,6 @@ set(AES_HEADERS
     aes
 )
 
-add_executable(${PROJECT_NAME} "main.c" ${AES_SOURCES})
+add_executable("test_vectors" "test_vectors.c" ${AES_SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${AES_HEADERS})
+target_include_directories("test_vectors" PRIVATE ${AES_HEADERS})
