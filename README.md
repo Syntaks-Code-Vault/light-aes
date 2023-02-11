@@ -3,11 +3,11 @@
 
 <div align="center">
   <a href="https://github.com/Syntaks-Code-Vault/light-aes/actions/workflows/cmake_build_and_run.yml">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Syntaks-Code-Vault/light-aes/cmake_build_and_run.yml?label=Test%20Vector%20Equivalence">
+    <img alt="light-aes Test Vector Equivalence Status" src="https://img.shields.io/github/actions/workflow/status/Syntaks-Code-Vault/light-aes/cmake_build_and_run.yml?label=Test%20Vector%20Equivalence">
   </a>
   
   <a href="https://github.com/Syntaks-Code-Vault/light-aes/blob/main/LICENSE">
-    <img alt="GitHub" src="https://img.shields.io/github/license/Syntaks-Code-Vault/light-aes">
+    <img alt="light-aes License" src="https://img.shields.io/github/license/Syntaks-Code-Vault/light-aes">
   </a>
 </div>
 
