@@ -2,7 +2,13 @@
 <p align="center">A Memory Optimized AES-128/192/256 Implementation in C</p>
 
 <div align="center">
-  <a href="https://github.com/Syntaks-Code-Vault/light-aes/actions/workflows/cmake_build_and_run.yml"><img align="center" src="https://github.com/Syntaks-Code-Vault/light-aes/actions/workflows/cmake_build_and_run.yml/badge.svg" /></a>
+  <a href="https://github.com/Syntaks-Code-Vault/light-aes/actions/workflows/cmake_build_and_run.yml">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Syntaks-Code-Vault/light-aes/cmake_build_and_run.yml?label=Test%20Vector%20Equivalence">
+  </a>
+  
+  <a href="https://github.com/Syntaks-Code-Vault/light-aes/blob/main/LICENSE">
+    <img alt="GitHub" src="https://img.shields.io/github/license/Syntaks-Code-Vault/light-aes">
+  </a>
 </div>
 
 [![]()](https://github.com/Syntaks-Code-Vault/light-aes/actions/workflows/cmake_build_and_run.yml)
