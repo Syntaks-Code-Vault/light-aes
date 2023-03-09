@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdint.h>
 
 #ifndef AES_TOOLS_H
 #define AES_TOOLS_H
 
-typedef unsigned char byte;
+typedef uint8_t byte;
 
 void __xor(byte* dst, byte* src, byte n);
 void __copy(byte* dst, byte* src, byte n);
